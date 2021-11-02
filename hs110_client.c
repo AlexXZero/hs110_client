@@ -114,6 +114,11 @@ int main(int argc, char *argv[])
         return -errno;
     }
 
+    struct timeval timeout = {300, 0}; // 5 minutes
+    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout)) < 0) {
+        fprintf(stderr, "Warning: failed to setup recv timeout(%d): %s\n", errno, strerror(errno));
+    }
+
     if (argc < 3) {
         char buffer[256];
         while (!feof(stdin)) {
